@@ -2,195 +2,151 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bear NFT Case Clicker</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Star Collector</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #1a1a1a; color: white; text-align: center; margin: 0; padding: 20px; }
-        .container { max-width: 600px; margin: auto; background: #2c2c2c; padding: 20px; border-radius: 15px; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
-        .stats { display: flex; justify-content: space-around; background: #3d3d3d; padding: 10px; border-radius: 10px; margin-bottom: 20px; }
-        .stars-count { font-size: 24px; color: #ffcc00; font-weight: bold; }
-        .rank { color: #4caf50; font-weight: bold; }
-        
-        .tap-section { margin: 20px 0; }
-        #tap-btn { background: #0088cc; border: none; padding: 20px; border-radius: 50%; width: 120px; height: 120px; color: white; font-weight: bold; cursor: pointer; transition: 0.2s; box-shadow: 0 5px #005580; }
-        #tap-btn:active { transform: translateY(4px); box-shadow: 0 2px #005580; }
-
-        .cases { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; }
-        .case-card { background: #444; padding: 15px; border-radius: 10px; border: 1px solid #555; }
-        button { background: #28a745; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; margin-top: 5px; }
-        button:disabled { background: #666; cursor: not-allowed; }
-
-        .exchange-section { margin-top: 30px; border-top: 2px solid #444; padding-top: 20px; }
-        .inventory { margin-top: 20px; font-style: italic; color: #aaa; }
-        #result-display { height: 40px; margin: 15px 0; font-weight: bold; color: #ffeb3b; }
+        body {
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            background: radial-gradient(circle, #1a1a2e 0%, #16213e 100%);
+            color: white;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            touch-action: manipulation; /* Zoomni bloklaydi */
+        }
+        .header { background: rgba(0,0,0,0.5); padding: 15px; border-bottom: 2px solid #ffd700; }
+        .stats { font-size: 20px; color: #ffd700; margin: 10px 0; }
+        .main-tap-area {
+            width: 200px; height: 200px;
+            background: url('https://cdn-icons-png.flaticon.com/512/1828/1828884.png') no-repeat center;
+            background-size: contain;
+            margin: 30px auto;
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+        .main-tap-area:active { transform: scale(0.9); }
+        .boxes { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; padding: 20px; }
+        .box {
+            background: #0f3460; border: 2px solid #e94560; border-radius: 10px;
+            padding: 15px; width: 120px; cursor: pointer;
+        }
+        .box:hover { background: #16213e; }
+        .btn {
+            background: #e94560; color: white; border: none; padding: 10px 20px;
+            border-radius: 5px; cursor: pointer; margin: 5px;
+        }
+        .btn:disabled { background: #555; }
+        .ultra { color: #00ff00; font-weight: bold; font-size: 24px; text-shadow: 0 0 10px #00ff00; }
     </style>
 </head>
-<body>
+<body onclick="">
 
-<div class="container">
-    <h2>🐻 Bear NFT Case</h2>
-    
-    <div class="stats">
-        <div>STARS: <br><span id="stars" class="stars-count">25</span></div>
-        <div>CWK: <br><span id="cwk">0</span></div>
-        <div>PRIME: <br><span id="prime">0</span></div>
-    </div>
-
-    <div id="rank-display">Статус: <span class="rank">Новичок</span></div>
-
-    <div class="tap-section">
-        <button id="tap-btn">TAP & EARN<br>+0.5 ⭐</button>
-    </div>
-
-    <div id="result-display"></div>
-
-    <h3>Кейсы с медведями</h3>
-    <div class="cases">
-        <div class="case-card">
-            <p>Обычный кейс<br>💰 10 STARS</p>
-            <button onclick="openCase(10)">Открыть</button>
-        </div>
-        <div class="case-card">
-            <p>Редкий кейс<br>💰 25 STARS</p>
-            <button onclick="openCase(25)">Открыть</button>
-        </div>
-        <div class="case-card">
-            <p>Эпик кейс<br>💰 60 STARS</p>
-            <button onclick="openCase(60)">Открыть</button>
-        </div>
-        <div class="case-card">
-            <p>Легендарный<br>💰 150 STARS</p>
-            <button onclick="openCase(150)">Открыть</button>
-        </div>
-    </div>
-
-    <div class="exchange-section">
-        <h3>Обмен валюты</h3>
-        <p>275,500 STARS = 1 CWK</p>
-        <button onclick="buyCWK()">Обменять на CWK</button>
-        <br><br>
-        <p>1 CWK = 1 PRIME</p>
-        <button onclick="buyPrime()">Купить PRIME</button>
-    </div>
-
-    <div class="inventory">
-        Последний выигрыш: <span id="last-bear">-</span>
-    </div>
-
-    <button onclick="resetGame()" style="margin-top: 40px; background: #dc3545; font-size: 10px;">Сбросить прогресс</button>
+<div class="header">
+    <h1>Star Collector</h1>
+    <div id="ultra-title" class="ultra" style="display:none;">ТИТУЛ: ULTRA</div>
 </div>
 
+<div class="stats">
+    ⭐ Звёзды: <span id="stars">25</span><br>
+    💎 CWS: <span id="cws">0</span> / 5
+</div>
+
+<div class="main-tap-area" onclick="tap()"></div>
+<p>Нажми, чтобы получить 0.2⭐</p>
+
+<hr>
+
+<h3>Магазин Ящиков</h3>
+<div class="boxes">
+    <div class="box" onclick="buyBox(80)">📦 80⭐<br><small>Малый</small></div>
+    <div class="box" onclick="buyBox(130)">📦 130⭐<br><small>Средний</small></div>
+    <div class="box" onclick="buyBox(300)">🎁 300⭐<br><small>Большой</small></div>
+</div>
+
+<hr>
+
+<h3>Обмен</h3>
+<button class="btn" onclick="exchangeCWS()">Обменять 275,500⭐ на 1 CWS</button>
+<br>
+<button class="btn" onclick="resetGame()" style="background:#555;">Сбросить прогресс</button>
+
 <script>
-    // Boshlang'ich o'zgaruvchilar
-    let data = {
-        stars: 25,
-        cwk: 0,
-        prime: 0,
-        rank: "Новичок"
-    };
+    // O'zgaruvchilar
+    let stars = 25.0;
+    let cws = 0;
+    let hasUltra = false;
 
-    const bears = [
-        { name: "Обычный Мишка", value: 2 },
-        { name: "Танцующий Мишка", value: 5 },
-        { name: "Бизнес Мишка", value: 15 },
-        { name: "Золотой Медведь", value: 50 },
-        { name: "NFT Космо-Мишка", value: 200 }
-    ];
-
-    // O'yinni yuklash (Load)
-    function loadGame() {
-        const savedData = localStorage.getItem('bearGameSave');
-        if (savedData) {
-            data = JSON.parse(savedData);
-            updateUI();
-        }
-    }
-
-    // O'yinni saqlash (Save)
-    function saveGame() {
-        localStorage.setItem('bearGameSave', JSON.stringify(data));
+    // Load (Yuklash)
+    if (localStorage.getItem('starSave')) {
+        let data = JSON.parse(localStorage.getItem('starSave'));
+        stars = data.stars;
+        cws = data.cws;
+        hasUltra = data.hasUltra;
+        updateUI();
     }
 
     function updateUI() {
-        document.getElementById('stars').innerText = data.stars.toLocaleString();
-        document.getElementById('cwk').innerText = data.cwk;
-        document.getElementById('prime').innerText = data.prime;
-        
-        // Master darajasi tekshiruvi
-        if (data.prime >= 3) {
-            data.rank = "MASTER";
-            document.querySelector('.rank').style.color = "#ff00ff";
+        document.getElementById('stars').innerText = stars.toLocaleString(undefined, {minimumFractionDigits: 1, maximumFractionDigits: 1});
+        document.getElementById('cws').innerText = cws;
+        if (cws >= 5) {
+            hasUltra = true;
+            document.getElementById('ultra-title').style.display = 'block';
         }
-        document.querySelector('.rank').innerText = data.rank;
-    }
-
-    // Tap funksiyasi
-    document.getElementById('tap-btn').addEventListener('click', () => {
-        data.stars += 0.5;
-        updateUI();
         saveGame();
-    });
+    }
 
-    // Keys ochish
-    function openCase(cost) {
-        if (data.stars >= cost) {
-            data.stars -= cost;
-            
-            // Random NFT ayiq tushishi
-            const chance = Math.random();
-            let wonBear;
-            
-            if (chance > 0.95) wonBear = bears[4]; // 5% chance
-            else if (chance > 0.80) wonBear = bears[3];
-            else if (chance > 0.60) wonBear = bears[2];
-            else if (chance > 0.30) wonBear = bears[1];
-            else wonBear = bears[0];
+    function tap() {
+        stars += 0.2;
+        updateUI();
+    }
 
-            data.stars += wonBear.value;
-            document.getElementById('result-display').innerText = "Выпал: " + wonBear.name + " (+" + wonBear.value + "⭐)";
-            document.getElementById('last-bear').innerText = wonBear.name;
-            
+    function buyBox(cost) {
+        if (stars >= cost) {
+            stars -= cost;
+            // Boxdan tasodifiy mukofot (masalan 1.5 baravar ko'p yulduz chiqishi mumkin)
+            let win = Math.random() * (cost * 1.5);
+            stars += win;
+            alert("Вы открыли ящик и получили " + win.toFixed(1) + "⭐");
             updateUI();
-            saveGame();
         } else {
-            alert("Не хватает STARS!");
+            alert("Недостаточно звёзд!");
         }
     }
 
-    // CWK sotib olish (275,500 STARS = 1 CWK)
-    function buyCWK() {
-        if (data.stars >= 275500) {
-            data.stars -= 275500;
-            data.cwk += 1;
+    function exchangeCWS() {
+        if (stars >= 275500) {
+            stars -= 275500;
+            cws += 1;
+            alert("Поздравляем! Вы получили 1 CWS");
             updateUI();
-            saveGame();
         } else {
-            alert("Нужно 275,500 STARS!");
+            alert("Вам нужно 275,500 звёзд!");
         }
     }
 
-    // PRIME sotib olish (1 CWK = 1 PRIME)
-    function buyPrime() {
-        if (data.cwk >= 1) {
-            data.cwk -= 1;
-            data.prime += 1;
-            updateUI();
-            saveGame();
-        } else {
-            alert("Нужно 1 CWK!");
-        }
+    function saveGame() {
+        let data = { stars: stars, cws: cws, hasUltra: hasUltra };
+        localStorage.setItem('starSave', JSON.stringify(data));
     }
 
-    // O'yinni noldan boshlash
     function resetGame() {
-        if (confirm("Вы уверены, что хотите сбросить прогресс?")) {
-            localStorage.clear();
-            location.reload();
+        if(confirm("Вы уверены, что хотите обнулить игру?")) {
+            stars = 25;
+            cws = 0;
+            hasUltra = false;
+            document.getElementById('ultra-title').style.display = 'none';
+            updateUI();
         }
     }
 
-    // O'yin boshlanganda yuklash
-    loadGame();
+    // Mobil qurilmalarda "yaqinlashish"ni butunlay yo'qotish
+    document.addEventListener('touchstart', function (event) {
+        if (event.touches.length > 1) {
+            event.preventDefault();
+        }
+    }, { passive: false });
+
 </script>
 
 </body>
