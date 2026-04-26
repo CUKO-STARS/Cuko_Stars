@@ -1,1 +1,197 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bear NFT Case Clicker</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #1a1a1a; color: white; text-align: center; margin: 0; padding: 20px; }
+        .container { max-width: 600px; margin: auto; background: #2c2c2c; padding: 20px; border-radius: 15px; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
+        .stats { display: flex; justify-content: space-around; background: #3d3d3d; padding: 10px; border-radius: 10px; margin-bottom: 20px; }
+        .stars-count { font-size: 24px; color: #ffcc00; font-weight: bold; }
+        .rank { color: #4caf50; font-weight: bold; }
+        
+        .tap-section { margin: 20px 0; }
+        #tap-btn { background: #0088cc; border: none; padding: 20px; border-radius: 50%; width: 120px; height: 120px; color: white; font-weight: bold; cursor: pointer; transition: 0.2s; box-shadow: 0 5px #005580; }
+        #tap-btn:active { transform: translateY(4px); box-shadow: 0 2px #005580; }
 
+        .cases { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; }
+        .case-card { background: #444; padding: 15px; border-radius: 10px; border: 1px solid #555; }
+        button { background: #28a745; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; margin-top: 5px; }
+        button:disabled { background: #666; cursor: not-allowed; }
+
+        .exchange-section { margin-top: 30px; border-top: 2px solid #444; padding-top: 20px; }
+        .inventory { margin-top: 20px; font-style: italic; color: #aaa; }
+        #result-display { height: 40px; margin: 15px 0; font-weight: bold; color: #ffeb3b; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>🐻 Bear NFT Case</h2>
+    
+    <div class="stats">
+        <div>STARS: <br><span id="stars" class="stars-count">25</span></div>
+        <div>CWK: <br><span id="cwk">0</span></div>
+        <div>PRIME: <br><span id="prime">0</span></div>
+    </div>
+
+    <div id="rank-display">Статус: <span class="rank">Новичок</span></div>
+
+    <div class="tap-section">
+        <button id="tap-btn">TAP & EARN<br>+0.5 ⭐</button>
+    </div>
+
+    <div id="result-display"></div>
+
+    <h3>Кейсы с медведями</h3>
+    <div class="cases">
+        <div class="case-card">
+            <p>Обычный кейс<br>💰 10 STARS</p>
+            <button onclick="openCase(10)">Открыть</button>
+        </div>
+        <div class="case-card">
+            <p>Редкий кейс<br>💰 25 STARS</p>
+            <button onclick="openCase(25)">Открыть</button>
+        </div>
+        <div class="case-card">
+            <p>Эпик кейс<br>💰 60 STARS</p>
+            <button onclick="openCase(60)">Открыть</button>
+        </div>
+        <div class="case-card">
+            <p>Легендарный<br>💰 150 STARS</p>
+            <button onclick="openCase(150)">Открыть</button>
+        </div>
+    </div>
+
+    <div class="exchange-section">
+        <h3>Обмен валюты</h3>
+        <p>275,500 STARS = 1 CWK</p>
+        <button onclick="buyCWK()">Обменять на CWK</button>
+        <br><br>
+        <p>1 CWK = 1 PRIME</p>
+        <button onclick="buyPrime()">Купить PRIME</button>
+    </div>
+
+    <div class="inventory">
+        Последний выигрыш: <span id="last-bear">-</span>
+    </div>
+
+    <button onclick="resetGame()" style="margin-top: 40px; background: #dc3545; font-size: 10px;">Сбросить прогресс</button>
+</div>
+
+<script>
+    // Boshlang'ich o'zgaruvchilar
+    let data = {
+        stars: 25,
+        cwk: 0,
+        prime: 0,
+        rank: "Новичок"
+    };
+
+    const bears = [
+        { name: "Обычный Мишка", value: 2 },
+        { name: "Танцующий Мишка", value: 5 },
+        { name: "Бизнес Мишка", value: 15 },
+        { name: "Золотой Медведь", value: 50 },
+        { name: "NFT Космо-Мишка", value: 200 }
+    ];
+
+    // O'yinni yuklash (Load)
+    function loadGame() {
+        const savedData = localStorage.getItem('bearGameSave');
+        if (savedData) {
+            data = JSON.parse(savedData);
+            updateUI();
+        }
+    }
+
+    // O'yinni saqlash (Save)
+    function saveGame() {
+        localStorage.setItem('bearGameSave', JSON.stringify(data));
+    }
+
+    function updateUI() {
+        document.getElementById('stars').innerText = data.stars.toLocaleString();
+        document.getElementById('cwk').innerText = data.cwk;
+        document.getElementById('prime').innerText = data.prime;
+        
+        // Master darajasi tekshiruvi
+        if (data.prime >= 3) {
+            data.rank = "MASTER";
+            document.querySelector('.rank').style.color = "#ff00ff";
+        }
+        document.querySelector('.rank').innerText = data.rank;
+    }
+
+    // Tap funksiyasi
+    document.getElementById('tap-btn').addEventListener('click', () => {
+        data.stars += 0.5;
+        updateUI();
+        saveGame();
+    });
+
+    // Keys ochish
+    function openCase(cost) {
+        if (data.stars >= cost) {
+            data.stars -= cost;
+            
+            // Random NFT ayiq tushishi
+            const chance = Math.random();
+            let wonBear;
+            
+            if (chance > 0.95) wonBear = bears[4]; // 5% chance
+            else if (chance > 0.80) wonBear = bears[3];
+            else if (chance > 0.60) wonBear = bears[2];
+            else if (chance > 0.30) wonBear = bears[1];
+            else wonBear = bears[0];
+
+            data.stars += wonBear.value;
+            document.getElementById('result-display').innerText = "Выпал: " + wonBear.name + " (+" + wonBear.value + "⭐)";
+            document.getElementById('last-bear').innerText = wonBear.name;
+            
+            updateUI();
+            saveGame();
+        } else {
+            alert("Не хватает STARS!");
+        }
+    }
+
+    // CWK sotib olish (275,500 STARS = 1 CWK)
+    function buyCWK() {
+        if (data.stars >= 275500) {
+            data.stars -= 275500;
+            data.cwk += 1;
+            updateUI();
+            saveGame();
+        } else {
+            alert("Нужно 275,500 STARS!");
+        }
+    }
+
+    // PRIME sotib olish (1 CWK = 1 PRIME)
+    function buyPrime() {
+        if (data.cwk >= 1) {
+            data.cwk -= 1;
+            data.prime += 1;
+            updateUI();
+            saveGame();
+        } else {
+            alert("Нужно 1 CWK!");
+        }
+    }
+
+    // O'yinni noldan boshlash
+    function resetGame() {
+        if (confirm("Вы уверены, что хотите сбросить прогресс?")) {
+            localStorage.clear();
+            location.reload();
+        }
+    }
+
+    // O'yin boshlanganda yuklash
+    loadGame();
+</script>
+
+</body>
+</html>
