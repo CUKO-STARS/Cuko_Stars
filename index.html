@@ -3,194 +3,352 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CKS Cosmic Empire</title>
+    <title>CKS Cosmic Evolution</title>
     <style>
-        :root { --bg: #050811; --accent: #38bdf8; --gold: #fbbf24; --crimson: #e11d48; }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: white; margin: 0; display: flex; justify-content: center; min-height: 100vh; }
-        .app { width: 100%; max-width: 450px; padding: 15px; display: flex; flex-direction: column; gap: 15px; }
-        
-        /* Stats */
-        .panel { background: rgba(255,255,255,0.05); border-radius: 15px; padding: 15px; border: 1px solid rgba(255,255,255,0.1); text-align: center; }
-        .stats-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 10px; }
-        .val { font-size: 18px; font-weight: bold; color: var(--accent); }
-        .label { font-size: 10px; color: #64748b; }
+        :root {
+            --neon-blue: #00f3ff;
+            --neon-purple: #bc13fe;
+            --dark-bg: #0a0a0f;
+            --glass: rgba(255, 255, 255, 0.07);
+        }
 
-        /* Rocket (Crash Game) */
-        .rocket-box { background: linear-gradient(180deg, #1e1b4b 0%, #050811 100%); border: 2px solid #312e81; overflow: hidden; position: relative; height: 180px; }
-        #rocket-multiplier { font-size: 40px; font-weight: 900; margin-top: 40px; transition: 0.1s; }
-        .rocket-status { font-size: 12px; color: #94a3b8; }
-        .crash-input { background: #0f172a; border: 1px solid var(--accent); color: white; padding: 8px; border-radius: 5px; width: 80%; margin: 10px 0; }
+        body {
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            background: var(--dark-bg);
+            background-image: radial-gradient(circle at 50% 50%, #1a1a2e 0%, #0a0a0f 100%);
+            color: white;
+            margin: 0;
+            overflow-x: hidden;
+            display: flex;
+            justify-content: center;
+        }
 
-        /* General UI */
-        .btn { border: none; padding: 12px; border-radius: 10px; font-weight: bold; cursor: pointer; transition: 0.2s; width: 100%; }
-        .btn-blue { background: var(--accent); color: #000; }
-        .btn-red { background: var(--crimson); color: white; }
-        .btn-gold { background: var(--gold); color: #000; }
-        
-        #tap-target { width: 120px; height: 120px; margin: 10px auto; background: url('https://cdn-icons-png.flaticon.com/512/1041/1041888.png') center/contain no-repeat; cursor: pointer; }
-        #tap-target:active { transform: scale(0.9); }
+        .container {
+            width: 100%;
+            max-width: 480px;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
 
-        .transfer-box { font-size: 11px; color: #94a3b8; }
-        #export-key { font-family: monospace; background: #000; padding: 5px; display: block; margin: 5px 0; color: #10b981; word-break: break-all; }
+        /* Sahifa sarlavhasi */
+        .header {
+            text-align: center;
+            padding: 10px;
+            background: var(--glass);
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        /* Balans paneli */
+        .stats-card {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+            background: linear-gradient(145deg, rgba(0,243,255,0.1), rgba(188,19,254,0.1));
+            border-radius: 20px;
+            padding: 20px;
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .stat-item { text-align: center; }
+        .stat-item div:first-child { font-size: 10px; color: #aaa; text-transform: uppercase; letter-spacing: 1px; }
+        .stat-item div:last-child { font-size: 20px; font-weight: bold; color: var(--neon-blue); }
+
+        /* Tap Area */
+        .tap-section {
+            height: 200px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        #tap-object {
+            width: 150px;
+            height: 150px;
+            background: radial-gradient(circle, var(--neon-blue) 0%, transparent 70%);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: 0.1s;
+            box-shadow: 0 0 50px rgba(0, 243, 255, 0.3);
+            border: 4px solid var(--neon-blue);
+        }
+
+        #tap-object:active { transform: scale(0.9); box-shadow: 0 0 20px var(--neon-blue); }
+
+        /* Magazin va Inventar */
+        .section-title { font-size: 18px; margin-bottom: 10px; color: var(--neon-purple); text-shadow: 0 0 10px var(--neon-purple); }
         
-        /* Overlay */
-        #overlay { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.9); z-index:100; flex-direction:column; align-items:center; justify-content:center; }
+        .shop-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .shop-item {
+            background: var(--glass);
+            border-radius: 15px;
+            padding: 15px;
+            border: 1px solid rgba(255,255,255,0.1);
+            text-align: center;
+            transition: 0.3s;
+        }
+
+        .shop-item:hover { border-color: var(--neon-blue); }
+        .shop-item img { width: 50px; margin-bottom: 10px; }
+        .shop-item .price { color: #ffcc00; font-weight: bold; font-size: 14px; margin-bottom: 10px; }
+
+        .btn-buy {
+            background: var(--neon-purple);
+            border: none;
+            color: white;
+            padding: 8px;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            font-weight: bold;
+        }
+
+        .btn-buy:disabled { background: #444; cursor: not-allowed; }
+
+        /* Inventar */
+        .inventory {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            padding: 10px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 10px;
+            min-height: 50px;
+        }
+
+        .inv-slot {
+            width: 40px;
+            height: 40px;
+            background: var(--glass);
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 1px solid var(--neon-blue);
+        }
+
+        /* Animatsiya effektlari */
+        @keyframes floatUp {
+            from { transform: translateY(0); opacity: 1; }
+            to { transform: translateY(-100px); opacity: 0; }
+        }
+
+        .floating {
+            position: absolute;
+            color: var(--neon-blue);
+            font-weight: bold;
+            pointer-events: none;
+            animation: floatUp 0.6s ease-out forwards;
+        }
+
+        #master-rank {
+            display: none;
+            color: #ff0055;
+            font-weight: bold;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0% { text-shadow: 0 0 5px #ff0055; }
+            50% { text-shadow: 0 0 20px #ff0055; }
+            100% { text-shadow: 0 0 5px #ff0055; }
+        }
     </style>
 </head>
 <body>
 
-<div id="overlay">
-    <div id="case-result" style="font-size: 24px; text-align: center;"></div>
-    <button class="btn btn-blue" style="width: 200px; margin-top: 20px;" onclick="closeOverlay()">OK</button>
-</div>
+<div class="container">
+    <div class="header">
+        <h2>CKS EVOLUTION</h2>
+        <div id="master-rank">🏆 MASTER LEVEL 🏆</div>
+    </div>
 
-<div class="app">
-    <div class="panel">
-        <div class="stats-grid">
-            <div><div class="label">STARS</div><div class="val" id="stars">0</div></div>
-            <div><div class="label">CWK</div><div class="val" id="cwk">0</div></div>
-            <div><div class="label">PRIME</div><div class="val" id="prime">0</div></div>
+    <div class="stats-card">
+        <div class="stat-item">
+            <div>Stars</div>
+            <div id="stars">0</div>
         </div>
-        <div id="rank" style="font-weight: bold; color: var(--gold);">НОВИЧОК</div>
-    </div>
-
-    <div class="panel rocket-box" id="rocket-screen">
-        <div class="rocket-status" id="rocket-info">РАКЕТА ГОТОВА</div>
-        <div id="rocket-multiplier">1.00x</div>
-        <input type="number" id="bet-amount" class="crash-input" placeholder="Ставка STARS">
-        <button id="rocket-btn" class="btn btn-blue" onclick="startRocket()">ВЗЛЕТ</button>
-    </div>
-
-    <div id="tap-target"></div>
-    <div style="text-align:center; font-size:12px; color:var(--accent)">TAP TO EARN +0.2</div>
-
-    <div class="panel">
-        <div class="label" style="margin-bottom:10px">ОБМЕН: 275,500 ⭐ = 1 CWK | 3 CWK = 1 PRIME</div>
-        <div style="display:flex; gap:5px">
-            <button class="btn btn-blue" onclick="buyCWK()">STARS -> CWK</button>
-            <button class="btn btn-gold" onclick="buyPrime()">3 CWK -> PRIME</button>
+        <div class="stat-item">
+            <div>CWK</div>
+            <div id="cwk">0</div>
+        </div>
+        <div class="stat-item">
+            <div>Prime</div>
+            <div id="prime">0</div>
         </div>
     </div>
 
-    <div class="panel transfer-box">
-        <strong>ПЕРЕДАЧА АККАУНТА</strong>
-        <span id="export-key">ЗАГРУЗКА...</span>
-        <input type="text" id="import-key" class="crash-input" style="width:90%" placeholder="Вставьте код другого аккаунта">
-        <button class="btn" style="background:#444; color:white; padding:5px" onclick="importAccount()">ЗАГРУЗИТЬ АККАУНТ</button>
+    <div class="tap-section">
+        <div id="tap-object">CKS</div>
     </div>
+
+    <div class="section-title">Магазин CKS</div>
+    <div class="shop-grid">
+        <div class="shop-item">
+            <div class="price">10 Stars</div>
+            <div>Обычный Кейс</div>
+            <button class="btn-buy" onclick="buyBox(10, '📦')">Купить</button>
+        </div>
+        <div class="shop-item">
+            <div class="price">60 Stars</div>
+            <div>Премиум Кейс</div>
+            <button class="btn-buy" onclick="buyBox(60, '💎')">Купить</button>
+        </div>
+        <div class="shop-item">
+            <div class="price">275,500 Stars</div>
+            <div>1 CWK</div>
+            <button class="btn-buy" onclick="buyCWK()">Обменять</button>
+        </div>
+        <div class="shop-item">
+            <div class="price">3 CWK</div>
+            <div>1 PRIME</div>
+            <button class="btn-buy" onclick="buyPrime()">Улучшить</button>
+        </div>
+    </div>
+
+    <div class="section-title">Ваш инвентарь</div>
+    <div class="inventory" id="inventory">
+        </div>
+
+    <div class="section-title" style="font-size: 12px; color: #666;">Код аккаунта (Save/Load)</div>
+    <input type="text" id="acc-code" style="width:100%; background: #000; color: #0f0; border: none; padding: 5px; font-size: 10px;">
+    <button class="btn-buy" style="margin-top:5px; background: #333;" onclick="importAcc()">Загрузить по коду</button>
 </div>
 
 <script>
-    let data = { stars: 25, cwk: 0, prime: 0, rank: "НОВИЧОК" };
-    let isFlying = false;
-    let rocketInterval;
-
-    function updateUI() {
-        document.getElementById('stars').innerText = Math.floor(data.stars).toLocaleString();
-        document.getElementById('cwk').innerText = data.cwk;
-        document.getElementById('prime').innerText = data.prime;
-        
-        if(data.prime >= 3) {
-            data.rank = "MASTER";
-            document.getElementById('rank').style.color = "#ff00ff";
-        }
-        document.getElementById('rank').innerText = data.rank;
-        
-        // Export Key generation (Simple Base64)
-        const key = btoa(JSON.stringify(data));
-        document.getElementById('export-key').innerText = key;
-        
-        localStorage.setItem('cks_save_v3', JSON.stringify(data));
-    }
-
-    // Tap Earn
-    document.getElementById('tap-target').onclick = () => {
-        data.stars += 0.2;
-        updateUI();
+    // Asosiy ma'lumotlar ob'ekti
+    let game = {
+        stars: 25,
+        cwk: 0,
+        prime: 0,
+        items: []
     };
 
-    // Rocket (Crash) Game
-    function startRocket() {
-        const bet = parseFloat(document.getElementById('bet-amount').value);
-        if (isNaN(bet) || bet <= 0 || bet > data.stars) {
-            alert("Недостаточно STARS или неверная ставка!");
-            return;
+    // SAVE - Brauzerga saqlash
+    function saveGame() {
+        localStorage.setItem('CKS_SAVED_DATA', JSON.stringify(game));
+        document.getElementById('acc-code').value = btoa(JSON.stringify(game)); // Export code
+    }
+
+    // LOAD - Brauzerdan o'qish
+    function loadGame() {
+        const saved = localStorage.getItem('CKS_SAVED_DATA');
+        if (saved) {
+            try {
+                game = JSON.parse(saved);
+                renderAll();
+            } catch (e) {
+                console.log("Xato yuklashda!");
+            }
         }
+    }
 
-        if (isFlying) return;
-
-        data.stars -= bet;
-        isFlying = true;
-        let currentMult = 1.00;
-        const crashAt = (Math.random() * 4).toFixed(2); // Max 4x ish, but can crash early
+    function renderAll() {
+        document.getElementById('stars').innerText = Math.floor(game.stars).toLocaleString();
+        document.getElementById('cwk').innerText = game.cwk;
+        document.getElementById('prime').innerText = game.prime;
         
-        document.getElementById('rocket-btn').innerText = "ЗАБРАТЬ";
-        document.getElementById('rocket-btn').onclick = () => cashOut(bet, currentMult);
-        document.getElementById('rocket-info').innerText = "ПОЛЕТ...";
-        document.getElementById('rocket-multiplier').style.color = "white";
+        // Master daraja tekshiruvi
+        if (game.prime >= 3) {
+            document.getElementById('master-rank').style.display = 'block';
+        }
 
-        rocketInterval = setInterval(() => {
-            currentMult += 0.01;
-            document.getElementById('rocket-multiplier').innerText = currentMult.toFixed(2) + "x";
-
-            if (currentMult >= crashAt) {
-                clearInterval(rocketInterval);
-                document.getElementById('rocket-multiplier').innerText = "CRASHED!";
-                document.getElementById('rocket-multiplier').style.color = "var(--crimson)";
-                resetRocket();
-            }
-        }, 50);
+        // Inventarni yangilash
+        const inv = document.getElementById('inventory');
+        inv.innerHTML = '';
+        game.items.forEach(emoji => {
+            const slot = document.createElement('div');
+            slot.className = 'inv-slot';
+            slot.innerText = emoji;
+            inv.appendChild(slot);
+        });
     }
 
-    function cashOut(bet, mult) {
-        if (!isFlying) return;
-        clearInterval(rocketInterval);
-        const win = bet * mult;
-        data.stars += win;
-        alert("Вы выиграли: " + Math.floor(win) + " STARS!");
-        resetRocket();
-        updateUI();
-    }
+    // TAP funksiyasi
+    document.getElementById('tap-object').addEventListener('click', function(e) {
+        game.stars += 0.2;
+        
+        // Animatsiya (+0.2 yozuvi)
+        const f = document.createElement('div');
+        f.className = 'floating';
+        f.innerText = '+0.2';
+        f.style.left = e.pageX + 'px';
+        f.style.top = e.pageY + 'px';
+        document.body.appendChild(f);
+        setTimeout(() => f.remove(), 600);
 
-    function resetRocket() {
-        isFlying = false;
-        document.getElementById('rocket-btn').innerText = "ВЗЛЕТ";
-        document.getElementById('rocket-btn').onclick = startRocket;
-        document.getElementById('rocket-info').innerText = "РАКЕТА ГОТОВА";
-        setTimeout(() => {
-            if(!isFlying) document.getElementById('rocket-multiplier').innerText = "1.00x";
-        }, 2000);
-    }
+        renderAll();
+        saveGame();
+    });
 
-    // Economy
-    function buyCWK() {
-        if(data.stars >= 275500) { data.stars -= 275500; data.cwk += 1; updateUI(); }
-    }
-
-    function buyPrime() {
-        if(data.cwk >= 3) { data.cwk -= 3; data.prime += 1; updateUI(); }
-        else { alert("Нужно 3 CWK для 1 PRIME!"); }
-    }
-
-    // Account Transfer
-    function importAccount() {
-        try {
-            const key = document.getElementById('import-key').value;
-            const decoded = JSON.parse(atob(key));
-            if(decoded.stars !== undefined) {
-                data = decoded;
-                updateUI();
-                alert("Аккаунт успешно перенесен!");
-            }
-        } catch(e) {
-            alert("Неверный код аккаунта!");
+    // DO'KON: Keys sotib olish
+    function buyBox(cost, emoji) {
+        if (game.stars >= cost) {
+            game.stars -= cost;
+            game.items.push(emoji); // Inventarga qo'shish
+            alert("Вы открыли кейс и получили " + emoji);
+            renderAll();
+            saveGame();
+        } else {
+            alert("Недостаточно Stars!");
         }
     }
 
-    // Init
-    const saved = localStorage.getItem('cks_save_v3');
-    if(saved) data = JSON.parse(saved);
-    updateUI();
+    // DO'KON: CWK
+    function buyCWK() {
+        if (game.stars >= 275500) {
+            game.stars -= 275500;
+            game.cwk += 1;
+            renderAll();
+            saveGame();
+        } else {
+            alert("Недостаточно Stars!");
+        }
+    }
+
+    // DO'KON: PRIME
+    function buyPrime() {
+        if (game.cwk >= 3) {
+            game.cwk -= 3;
+            game.prime += 1;
+            renderAll();
+            saveGame();
+        } else {
+            alert("Нужно 3 CWK!");
+        }
+    }
+
+    // Akkauntni import qilish
+    function importAcc() {
+        const code = document.getElementById('acc-code').value;
+        try {
+            const decoded = JSON.parse(atob(code));
+            game = decoded;
+            renderAll();
+            saveGame();
+            alert("Аккаунт загружен!");
+        } catch(e) {
+            alert("Ошибка кода!");
+        }
+    }
+
+    // O'yin boshlanganda yuklash
+    loadGame();
 </script>
+
 </body>
 </html>
