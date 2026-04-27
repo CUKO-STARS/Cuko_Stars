@@ -3,53 +3,75 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cuko Stars - Официальная Игра</title>
+    <title>Cuko Stars v1.5 - Premium Update</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Exo+2:wght@300;700&display=swap');
+
+        :root {
+            --accent: #fbbf24;
+            --blue: #3b82f6;
+            --bg-dark: #05070a;
+            --card-glass: rgba(255, 255, 255, 0.03);
+            --border-glass: rgba(255, 255, 255, 0.1);
+        }
 
         body {
             margin: 0;
             padding: 0;
-            background: #0b0e14;
+            background: var(--bg-dark);
             color: white;
-            font-family: 'Montserrat', sans-serif;
+            font-family: 'Exo 2', sans-serif;
             display: flex;
             justify-content: center;
             min-height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Анимированный фон */
+        .bg-glow {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at 50% -20%, #1e3a8a 0%, transparent 50%),
+                        radial-gradient(circle at 50% 120%, #450a0a 0%, transparent 50%);
+            z-index: -1;
         }
 
         .container {
             width: 100%;
             max-width: 450px;
-            background: linear-gradient(180deg, #141a26 0%, #0b0e14 100%);
+            height: 100vh;
             display: flex;
             flex-direction: column;
             padding: 20px;
             box-sizing: border-box;
-            border: 2px solid #1f2937;
+            backdrop-filter: blur(10px);
+            border-left: 1px solid var(--border-glass);
+            border-right: 1px solid var(--border-glass);
         }
 
-        /* Панель статистики */
-        .stats-header {
+        /* Статистика с неоном */
+        .header-stats {
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
-            gap: 10px;
-            margin-bottom: 20px;
+            gap: 12px;
+            margin-bottom: 30px;
         }
 
-        .stat-box {
-            background: rgba(255, 255, 255, 0.05);
-            padding: 10px;
-            border-radius: 12px;
+        .stat-card {
+            background: var(--card-glass);
+            border: 1px solid var(--border-glass);
+            border-radius: 16px;
+            padding: 12px 5px;
             text-align: center;
-            border-bottom: 3px solid #374151;
+            transition: 0.3s;
         }
 
-        .stat-box div:first-child { font-size: 10px; color: #9ca3af; text-transform: uppercase; }
-        .stat-box div:last-child { font-size: 18px; font-weight: 900; color: #fbbf24; }
+        .stat-card:hover { border-color: var(--accent); transform: translateY(-3px); }
+        .stat-label { font-size: 10px; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; }
+        .stat-value { font-family: 'Orbitron', sans-serif; font-size: 16px; color: var(--accent); margin-top: 5px; text-shadow: 0 0 10px rgba(251, 191, 36, 0.3); }
 
-        /* Зона персонажа */
-        .main-game {
+        /* Игровое поле */
+        .game-view {
             flex: 1;
             display: flex;
             flex-direction: column;
@@ -60,262 +82,301 @@
 
         #master-status {
             display: none;
-            background: #ef4444;
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-size: 12px;
-            margin-bottom: 10px;
-            box-shadow: 0 0 15px rgba(239, 68, 68, 0.5);
+            background: linear-gradient(90deg, #ef4444, #f59e0b);
+            padding: 6px 20px;
+            border-radius: 50px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 11px;
+            font-weight: 900;
+            margin-bottom: 20px;
+            box-shadow: 0 0 20px rgba(239, 68, 68, 0.4);
+            animation: pulse 2s infinite;
         }
 
-        .character-circle {
-            width: 220px;
-            height: 220px;
-            background: radial-gradient(circle, #3b82f6 0%, transparent 70%);
+        @keyframes pulse { 0% { opacity: 0.8; } 50% { opacity: 1; transform: scale(1.05); } 100% { opacity: 0.8; } }
+
+        .character-portal {
+            position: relative;
+            width: 260px;
+            height: 260px;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.2) 0%, transparent 70%);
             border-radius: 50%;
             display: flex;
             justify-content: center;
             align-items: center;
             cursor: pointer;
-            transition: 0.1s;
+            transition: 0.1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        .character-circle:active { transform: scale(0.95); }
+        .character-portal:active { transform: scale(0.92); }
 
-        .character-img {
-            width: 180px;
-            height: 180px;
+        .character-main {
+            width: 220px;
+            height: 220px;
             object-fit: contain;
-            filter: drop-shadow(0 0 10px rgba(255,255,255,0.3));
+            filter: drop-shadow(0 0 15px rgba(59, 130, 246, 0.5));
+            /* Твоя картинка */
+            content: url('https://cdn-icons-png.flaticon.com/512/11545/11545598.png');
         }
 
-        /* Меню */
-        .menu-bar {
+        /* Навигация */
+        .bottom-nav {
             display: flex;
-            justify-content: space-around;
-            background: #1f2937;
-            padding: 10px;
-            border-radius: 15px;
-            margin-top: 20px;
+            gap: 10px;
+            background: rgba(0,0,0,0.5);
+            padding: 12px;
+            border-radius: 24px;
+            border: 1px solid var(--border-glass);
+            margin-bottom: 10px;
         }
 
-        .menu-btn {
+        .nav-link {
+            flex: 1;
             background: none;
             border: none;
-            color: #9ca3af;
-            font-weight: bold;
+            color: #64748b;
+            font-weight: 700;
+            padding: 12px;
+            border-radius: 16px;
             cursor: pointer;
-            padding: 10px;
+            transition: 0.3s;
+            font-size: 13px;
         }
 
-        .menu-btn.active { color: #fbbf24; border-bottom: 2px solid #fbbf24; }
+        .nav-link.active { background: var(--accent); color: #000; box-shadow: 0 4px 15px rgba(251, 191, 36, 0.4); }
 
-        /* Секции */
-        .content-section { display: none; margin-top: 20px; }
-        .content-section.active { display: block; }
+        /* Магазин v1.5 */
+        .shop-container {
+            display: none;
+            overflow-y: auto;
+            max-height: 50vh;
+            padding-right: 5px;
+        }
 
-        .shop-item {
-            background: rgba(255, 255, 255, 0.05);
-            padding: 15px;
-            border-radius: 12px;
-            margin-bottom: 10px;
+        .shop-container.active { display: block; }
+
+        .item-card {
+            background: var(--card-glass);
+            border: 1px solid var(--border-glass);
+            border-radius: 20px;
+            padding: 16px;
+            margin-bottom: 15px;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
-        .btn-buy {
-            background: #fbbf24;
-            color: #000;
+        .btn-action {
+            background: linear-gradient(135deg, var(--accent) 0%, #d97706 100%);
             border: none;
-            padding: 8px 15px;
-            border-radius: 8px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        /* Промокод */
-        .promo-box {
-            background: rgba(0, 0, 0, 0.3);
-            border: 1px dashed #4b5563;
-            padding: 15px;
+            color: #000;
+            padding: 10px 20px;
             border-radius: 12px;
+            font-weight: 900;
+            cursor: pointer;
+            text-transform: uppercase;
+            font-size: 11px;
+            transition: 0.2s;
+        }
+
+        .btn-action:hover { filter: brightness(1.1); transform: scale(1.05); }
+
+        /* Промокод v1.5 */
+        .promo-section {
+            background: rgba(251, 191, 36, 0.05);
+            border-radius: 20px;
+            padding: 20px;
             margin-top: 20px;
+            border: 1px dashed var(--accent);
             text-align: center;
         }
 
-        .promo-input {
-            width: 85%;
-            background: #0b0e14;
-            border: 1px solid #374151;
-            color: #fbbf24;
-            padding: 10px;
-            border-radius: 8px;
+        .promo-field {
+            width: 100%;
+            background: #000;
+            border: 1px solid #334155;
+            color: var(--accent);
+            padding: 12px;
+            border-radius: 12px;
             text-align: center;
-            font-family: 'Montserrat';
-            margin-bottom: 10px;
+            margin-bottom: 12px;
+            font-family: 'Orbitron', sans-serif;
+            box-sizing: border-box;
         }
 
-        /* Анимация клика */
-        @keyframes floatUp {
-            0% { transform: translateY(0); opacity: 1; }
-            100% { transform: translateY(-100px); opacity: 0; }
-        }
-
-        .tap-anim {
+        /* Эффект клика */
+        .click-particle {
             position: absolute;
-            color: #fbbf24;
+            color: var(--accent);
+            font-family: 'Orbitron', sans-serif;
             font-weight: 900;
             pointer-events: none;
-            animation: floatUp 0.6s forwards;
+            animation: riseFade 0.8s ease-out forwards;
+            z-index: 100;
         }
+
+        @keyframes riseFade {
+            0% { transform: translateY(0) scale(1); opacity: 1; }
+            100% { transform: translateY(-120px) scale(1.5); opacity: 0; }
+        }
+
     </style>
 </head>
 <body>
 
+<div class="bg-glow"></div>
+
 <div class="container">
-    <div class="stats-header">
-        <div class="stat-box"><div>Звезды</div><div id="stars">25</div></div>
-        <div class="stat-box"><div>CWK</div><div id="cwk">0</div></div>
-        <div class="stat-box"><div>PRIME</div><div id="prime">0</div></div>
-    </div>
-
-    <div class="main-game" id="section-tap">
-        <div id="master-status">МАСТЕР РАНГ</div>
-        <div class="character-circle" onclick="handleTap(event)">
-            <img class="character-img" src="https://cdn-icons-png.flaticon.com/512/11545/11545598.png" id="hero-img" alt="Персонаж">
+    <div class="header-stats">
+        <div class="stat-card">
+            <div class="stat-label">Звезды</div>
+            <div id="stars-val" class="stat-value">25</div>
         </div>
-        <p style="color: #6b7280; margin-top: 20px;">Нажимай, чтобы заработать +0.5 ⭐</p>
-    </div>
-
-    <div class="content-section" id="section-shop">
-        <div class="shop-item">
-            <div><b>Бронзовый кейс</b><br><small>Цена: 10 ⭐</small></div>
-            <button class="btn-buy" onclick="openBox(10)">Открыть</button>
+        <div class="stat-card">
+            <div class="stat-label">CWK</div>
+            <div id="cwk-val" class="stat-value">0</div>
         </div>
-        <div class="stat-box" style="margin: 20px 0;">
-            <p style="font-size: 12px;">Обмен: 275,500 ⭐ = 1 CWK</p>
-            <button class="btn-buy" style="width: 100%;" onclick="buyCWK()">Обменять Звезды</button>
-        </div>
-        <div class="stat-box">
-            <p style="font-size: 12px;">Обмен: 1 CWK = 1 PRIME</p>
-            <button class="btn-buy" style="width: 100%; background: #10b981; color: white;" onclick="buyPrime()">Купить Prime</button>
-        </div>
-
-        <div class="promo-box">
-            <div style="font-size: 10px; color: #9ca3af; margin-bottom: 8px;">ЕСТЬ ПРОМОКОД?</div>
-            <input type="text" id="promo-input" class="promo-input" placeholder="Введите код">
-            <button class="btn-buy" style="width: 90%; background: #6366f1; color: white;" onclick="usePromo()">Активировать</button>
+        <div class="stat-card">
+            <div class="stat-label">PRIME</div>
+            <div id="prime-val" class="stat-value">0</div>
         </div>
     </div>
 
-    <div class="menu-bar">
-        <button class="menu-btn active" id="btn-game" onclick="showSection('tap', this)">ИГРА</button>
-        <button class="menu-btn" id="btn-shop" onclick="showSection('shop', this)">МАГАЗИН</button>
-        <button class="menu-btn" onclick="saveGame()">СОХРАНИТЬ</button>
+    <div class="game-view" id="view-game">
+        <div id="master-status">MASTER RANK</div>
+        <div class="character-portal" onclick="doTap(event)">
+            <img class="character-main" alt="Cuko Character">
+        </div>
+        <p style="color: #475569; font-size: 14px; margin-top: 30px; letter-spacing: 1px;">ТАПАЙ, ЧТОБЫ МАЙНИТЬ +0.5 ⭐</p>
+    </div>
+
+    <div class="shop-container" id="view-shop">
+        <div class="item-card">
+            <div><b style="font-size: 16px;">Бронзовый кейс</b><br><small style="color: #64748b;">Шанс на удачу | Цена: 10 ⭐</small></div>
+            <button class="btn-action" onclick="openBox(10)">Открыть</button>
+        </div>
+        
+        <div class="item-card" style="border-color: var(--blue);">
+            <div><b style="font-size: 16px; color: var(--blue);">Обмен на CWK</b><br><small style="color: #64748b;">275,500 ⭐ за 1 ед.</small></div>
+            <button class="btn-action" style="background: var(--blue); color: white;" onclick="buyCWK()">Обмен</button>
+        </div>
+
+        <div class="item-card" style="border-color: #10b981;">
+            <div><b style="font-size: 16px; color: #10b981;">Апгрейд PRIME</b><br><small style="color: #64748b;">Требуется: 1 CWK</small></div>
+            <button class="btn-action" style="background: #10b981; color: white;" onclick="buyPrime()">Купить</button>
+        </div>
+
+        <div class="promo-section">
+            <div style="font-size: 12px; margin-bottom: 10px; color: var(--accent); font-weight: 700;">АКТИВАЦИЯ ПРОМОКОДА</div>
+            <input type="text" id="promo-input" class="promo-field" placeholder="KODE...">
+            <button class="btn-action" style="width: 100%;" onclick="usePromo()">Подтвердить</button>
+        </div>
+    </div>
+
+    <div class="bottom-nav">
+        <button class="nav-link active" id="nav-game" onclick="switchTab('game', this)">ГЛАВНАЯ</button>
+        <button class="nav-link" id="nav-shop" onclick="switchTab('shop', this)">МАГАЗИН</button>
+        <button class="nav-link" style="color: var(--accent);" onclick="saveGame(true)">SAVE</button>
     </div>
 </div>
 
 <script>
-    let data = {
+    let gameState = {
         stars: 25,
         cwk: 0,
-        prime: 0,
-        rank: "Игрок"
+        prime: 0
     };
 
-    // ЛОГИКА ПРОМОКОДОВ
+    // Пул промокодов
     function usePromo() {
-        const input = document.getElementById('promo-input').value.trim();
-        if (input === 'khiva90') {
-            data.stars = 999999999;
-            data.cwk = 999999999;
-            data.prime = 999999999;
-            alert("АДМИН: Доступ разрешен! Ресурсы зачислены.");
+        const code = document.getElementById('promo-input').value.trim();
+        if (code === 'khiva90') {
+            gameState.stars = 999999999;
+            gameState.cwk = 999999999;
+            gameState.prime = 999999999;
+            alert("ADMIN: Ранг Бога активирован!");
             updateUI();
-        } else if (input === 'cukoo26') {
-            data.stars += 175000;
-            alert("Промокод активирован: +175,000 ⭐");
+        } else if (code === 'cukoo26') {
+            gameState.stars += 175000;
+            alert("Бонус: +175,000 ⭐");
             updateUI();
         } else {
-            alert("Неверный код!");
+            alert("Ошибка: Недействительный код");
         }
         document.getElementById('promo-input').value = "";
     }
 
-    function updateUI() {
-        document.getElementById('stars').innerText = Math.floor(data.stars).toLocaleString();
-        document.getElementById('cwk').innerText = Math.floor(data.cwk).toLocaleString();
-        document.getElementById('prime').innerText = Math.floor(data.prime).toLocaleString();
+    function doTap(e) {
+        gameState.stars += 0.5;
         
-        if (data.prime >= 3) {
+        // Частица при клике
+        const p = document.createElement('div');
+        p.className = 'click-particle';
+        p.innerText = '+0.5';
+        p.style.left = e.pageX + 'px';
+        p.style.top = e.pageY + 'px';
+        document.body.appendChild(p);
+        setTimeout(() => p.remove(), 800);
+        
+        updateUI();
+    }
+
+    function updateUI() {
+        document.getElementById('stars-val').innerText = Math.floor(gameState.stars).toLocaleString();
+        document.getElementById('cwk-val').innerText = Math.floor(gameState.cwk).toLocaleString();
+        document.getElementById('prime-val').innerText = Math.floor(gameState.prime).toLocaleString();
+        
+        if (gameState.prime >= 3) {
             document.getElementById('master-status').style.display = 'block';
         } else {
             document.getElementById('master-status').style.display = 'none';
         }
-        saveGame();
+        saveGame(false);
     }
 
-    function handleTap(e) {
-        data.stars += 0.5;
-        const float = document.createElement('div');
-        float.className = 'tap-anim';
-        float.innerText = '+0.5';
-        float.style.left = e.pageX + 'px';
-        float.style.top = e.pageY + 'px';
-        document.body.appendChild(float);
-        setTimeout(() => float.remove(), 600);
-        updateUI();
-    }
-
-    function showSection(id, btn) {
-        document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
-        document.getElementById('section-tap').style.display = (id === 'tap') ? 'flex' : 'none';
-        if(id === 'shop') document.getElementById('section-shop').classList.add('active');
-        document.querySelectorAll('.menu-btn').forEach(b => b.classList.remove('active'));
+    function switchTab(tab, btn) {
+        document.getElementById('view-game').style.display = (tab === 'game') ? 'flex' : 'none';
+        document.getElementById('view-shop').classList.toggle('active', tab === 'shop');
+        
+        document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
         btn.classList.add('active');
     }
 
     function openBox(cost) {
-        if (data.stars >= cost) {
-            data.stars -= cost;
+        if (gameState.stars >= cost) {
+            gameState.stars -= cost;
             const win = Math.floor(Math.random() * (cost * 3));
-            data.stars += win;
-            alert(`Вы открыли кейс и получили: ${win} ⭐`);
+            gameState.stars += win;
+            alert(`Результат открытия: ${win} ⭐`);
             updateUI();
-        } else {
-            alert("Недостаточно звезд!");
-        }
+        } else { alert("Недостаточно звезд!"); }
     }
 
     function buyCWK() {
-        if (data.stars >= 275500) {
-            data.stars -= 275500;
-            data.cwk += 1;
+        if (gameState.stars >= 275500) {
+            gameState.stars -= 275500;
+            gameState.cwk += 1;
             updateUI();
-        } else {
-            alert("Недостаточно звезд!");
-        }
+        } else { alert("Недостаточно звезд!"); }
     }
 
     function buyPrime() {
-        if (data.cwk >= 1) {
-            data.cwk -= 1;
-            data.prime += 1;
+        if (gameState.cwk >= 1) {
+            gameState.cwk -= 1;
+            gameState.prime += 1;
             updateUI();
-        } else {
-            alert("Нужен 1 CWK!");
-        }
+        } else { alert("Нужен 1 CWK!"); }
     }
 
-    function saveGame() {
-        localStorage.setItem('CukoStars_Final_RU', JSON.stringify(data));
+    function saveGame(manual) {
+        localStorage.setItem('CukoStars_V1_5', JSON.stringify(gameState));
+        if(manual) alert("Прогресс в облаке!");
     }
 
     function loadGame() {
-        const saved = localStorage.getItem('CukoStars_Final_RU');
-        if (saved) {
-            data = JSON.parse(saved);
+        const data = localStorage.getItem('CukoStars_V1_5');
+        if (data) {
+            gameState = JSON.parse(data);
             updateUI();
         }
     }
