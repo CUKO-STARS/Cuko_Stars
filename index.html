@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cuko Stars - Official Game</title>
+    <title>Cuko Stars - Официальная Игра</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&display=swap');
 
@@ -29,7 +29,7 @@
             border: 2px solid #1f2937;
         }
 
-        /* Stats Panel */
+        /* Панель статистики */
         .stats-header {
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
@@ -48,7 +48,7 @@
         .stat-box div:first-child { font-size: 10px; color: #9ca3af; text-transform: uppercase; }
         .stat-box div:last-child { font-size: 18px; font-weight: 900; color: #fbbf24; }
 
-        /* Character/Tap Zone */
+        /* Зона персонажа */
         .main-game {
             flex: 1;
             display: flex;
@@ -89,7 +89,7 @@
             filter: drop-shadow(0 0 10px rgba(255,255,255,0.3));
         }
 
-        /* Menu Tabs */
+        /* Меню */
         .menu-bar {
             display: flex;
             justify-content: space-around;
@@ -110,7 +110,7 @@
 
         .menu-btn.active { color: #fbbf24; border-bottom: 2px solid #fbbf24; }
 
-        /* Sections */
+        /* Секции */
         .content-section { display: none; margin-top: 20px; }
         .content-section.active { display: block; }
 
@@ -134,7 +134,7 @@
             cursor: pointer;
         }
 
-        /* Promo Section */
+        /* Промокод */
         .promo-box {
             background: rgba(0, 0, 0, 0.3);
             border: 1px dashed #4b5563;
@@ -145,7 +145,7 @@
         }
 
         .promo-input {
-            width: 80%;
+            width: 85%;
             background: #0b0e14;
             border: 1px solid #374151;
             color: #fbbf24;
@@ -156,7 +156,7 @@
             margin-bottom: 10px;
         }
 
-        /* Floating Animation */
+        /* Анимация клика */
         @keyframes floatUp {
             0% { transform: translateY(0); opacity: 1; }
             100% { transform: translateY(-100px); opacity: 0; }
@@ -175,27 +175,27 @@
 
 <div class="container">
     <div class="stats-header">
-        <div class="stat-box"><div>Stars</div><div id="stars">25</div></div>
+        <div class="stat-box"><div>Звезды</div><div id="stars">25</div></div>
         <div class="stat-box"><div>CWK</div><div id="cwk">0</div></div>
-        <div class="stat-box"><div>Prime</div><div id="prime">0</div></div>
+        <div class="stat-box"><div>PRIME</div><div id="prime">0</div></div>
     </div>
 
     <div class="main-game" id="section-tap">
-        <div id="master-status">MASTER RANK</div>
+        <div id="master-status">МАСТЕР РАНГ</div>
         <div class="character-circle" onclick="handleTap(event)">
-            <img class="character-img" src="https://cdn-icons-png.flaticon.com/512/1041/1041888.png" id="hero-img" alt="Cuko">
+            <img class="character-img" src="https://cdn-icons-png.flaticon.com/512/11545/11545598.png" id="hero-img" alt="Персонаж">
         </div>
-        <p style="color: #6b7280; margin-top: 20px;">Tap to Earn +0.5 ⭐</p>
+        <p style="color: #6b7280; margin-top: 20px;">Нажимай, чтобы заработать +0.5 ⭐</p>
     </div>
 
     <div class="content-section" id="section-shop">
         <div class="shop-item">
-            <div><b>Bronze Box</b><br><small>Цена: 10 Stars</small></div>
+            <div><b>Бронзовый кейс</b><br><small>Цена: 10 ⭐</small></div>
             <button class="btn-buy" onclick="openBox(10)">Открыть</button>
         </div>
         <div class="stat-box" style="margin: 20px 0;">
-            <p style="font-size: 12px;">Обмен: 275,500 Stars = 1 CWK</p>
-            <button class="btn-buy" style="width: 100%;" onclick="buyCWK()">Обменять Stars</button>
+            <p style="font-size: 12px;">Обмен: 275,500 ⭐ = 1 CWK</p>
+            <button class="btn-buy" style="width: 100%;" onclick="buyCWK()">Обменять Звезды</button>
         </div>
         <div class="stat-box">
             <p style="font-size: 12px;">Обмен: 1 CWK = 1 PRIME</p>
@@ -203,15 +203,16 @@
         </div>
 
         <div class="promo-box">
-            <input type="text" id="promo-input" class="promo-input" placeholder="Введите промокод">
-            <button class="btn-buy" style="width: 85%; background: #6366f1; color: white;" onclick="usePromo()">Активировать</button>
+            <div style="font-size: 10px; color: #9ca3af; margin-bottom: 8px;">ЕСТЬ ПРОМОКОД?</div>
+            <input type="text" id="promo-input" class="promo-input" placeholder="Введите код">
+            <button class="btn-buy" style="width: 90%; background: #6366f1; color: white;" onclick="usePromo()">Активировать</button>
         </div>
     </div>
 
     <div class="menu-bar">
-        <button class="menu-btn active" id="btn-game" onclick="showSection('tap', this)">GAME</button>
-        <button class="menu-btn" id="btn-shop" onclick="showSection('shop', this)">SHOP / BOX</button>
-        <button class="menu-btn" onclick="saveGame()">SAVE</button>
+        <button class="menu-btn active" id="btn-game" onclick="showSection('tap', this)">ИГРА</button>
+        <button class="menu-btn" id="btn-shop" onclick="showSection('shop', this)">МАГАЗИН</button>
+        <button class="menu-btn" onclick="saveGame()">СОХРАНИТЬ</button>
     </div>
 </div>
 
@@ -220,24 +221,24 @@
         stars: 25,
         cwk: 0,
         prime: 0,
-        rank: "Player"
+        rank: "Игрок"
     };
 
-    // PROMO LOGIKASI
+    // ЛОГИКА ПРОМОКОДОВ
     function usePromo() {
         const input = document.getElementById('promo-input').value.trim();
         if (input === 'khiva90') {
             data.stars = 999999999;
             data.cwk = 999999999;
             data.prime = 999999999;
-            alert("ADMIN: OK!");
+            alert("АДМИН: Доступ разрешен! Ресурсы зачислены.");
             updateUI();
         } else if (input === 'cukoo26') {
             data.stars += 175000;
-            alert("175,000 Stars OK!");
+            alert("Промокод активирован: +175,000 ⭐");
             updateUI();
         } else {
-            alert("Xato kod!");
+            alert("Неверный код!");
         }
         document.getElementById('promo-input').value = "";
     }
@@ -249,6 +250,8 @@
         
         if (data.prime >= 3) {
             document.getElementById('master-status').style.display = 'block';
+        } else {
+            document.getElementById('master-status').style.display = 'none';
         }
         saveGame();
     }
@@ -278,8 +281,10 @@
             data.stars -= cost;
             const win = Math.floor(Math.random() * (cost * 3));
             data.stars += win;
-            alert(`Sizga ${win} Stars tushdi!`);
+            alert(`Вы открыли кейс и получили: ${win} ⭐`);
             updateUI();
+        } else {
+            alert("Недостаточно звезд!");
         }
     }
 
@@ -288,6 +293,8 @@
             data.stars -= 275500;
             data.cwk += 1;
             updateUI();
+        } else {
+            alert("Недостаточно звезд!");
         }
     }
 
@@ -296,15 +303,17 @@
             data.cwk -= 1;
             data.prime += 1;
             updateUI();
+        } else {
+            alert("Нужен 1 CWK!");
         }
     }
 
     function saveGame() {
-        localStorage.setItem('CukoStars_Final_Final', JSON.stringify(data));
+        localStorage.setItem('CukoStars_Final_RU', JSON.stringify(data));
     }
 
     function loadGame() {
-        const saved = localStorage.getItem('CukoStars_Final_Final');
+        const saved = localStorage.getItem('CukoStars_Final_RU');
         if (saved) {
             data = JSON.parse(saved);
             updateUI();
