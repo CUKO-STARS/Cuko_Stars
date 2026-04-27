@@ -86,8 +86,6 @@
             width: 180px;
             height: 180px;
             object-fit: contain;
-            /* Rasm havola */
-            content: url('https://share.google/aEbupyaq69yrdGOOd'); 
             filter: drop-shadow(0 0 10px rgba(255,255,255,0.3));
         }
 
@@ -117,7 +115,7 @@
         .content-section.active { display: block; }
 
         .shop-item {
-            background: rgba(255,255,255,0.05);
+            background: rgba(255, 255, 255, 0.05);
             padding: 15px;
             border-radius: 12px;
             margin-bottom: 10px;
@@ -185,7 +183,7 @@
     <div class="main-game" id="section-tap">
         <div id="master-status">MASTER RANK</div>
         <div class="character-circle" onclick="handleTap(event)">
-            <img class="character-img" alt="Cuko">
+            <img class="character-img" src="https://cdn-icons-png.flaticon.com/512/1041/1041888.png" id="hero-img" alt="Cuko">
         </div>
         <p style="color: #6b7280; margin-top: 20px;">Tap to Earn +0.5 ⭐</p>
     </div>
@@ -205,8 +203,7 @@
         </div>
 
         <div class="promo-box">
-            <div style="font-size: 10px; color: #9ca3af; margin-bottom: 8px;">ЕСТЬ ПРОМОКОД?</div>
-            <input type="text" id="promo-input" class="promo-input" placeholder="Введите код">
+            <input type="text" id="promo-input" class="promo-input" placeholder="Введите промокод">
             <button class="btn-buy" style="width: 85%; background: #6366f1; color: white;" onclick="usePromo()">Активировать</button>
         </div>
     </div>
@@ -226,6 +223,25 @@
         rank: "Player"
     };
 
+    // PROMO LOGIKASI
+    function usePromo() {
+        const input = document.getElementById('promo-input').value.trim();
+        if (input === 'khiva90') {
+            data.stars = 999999999;
+            data.cwk = 999999999;
+            data.prime = 999999999;
+            alert("ADMIN: OK!");
+            updateUI();
+        } else if (input === 'cukoo26') {
+            data.stars += 175000;
+            alert("175,000 Stars OK!");
+            updateUI();
+        } else {
+            alert("Xato kod!");
+        }
+        document.getElementById('promo-input').value = "";
+    }
+
     function updateUI() {
         document.getElementById('stars').innerText = Math.floor(data.stars).toLocaleString();
         document.getElementById('cwk').innerText = Math.floor(data.cwk).toLocaleString();
@@ -233,15 +249,12 @@
         
         if (data.prime >= 3) {
             document.getElementById('master-status').style.display = 'block';
-        } else {
-            document.getElementById('master-status').style.display = 'none';
         }
         saveGame();
     }
 
     function handleTap(e) {
         data.stars += 0.5;
-        
         const float = document.createElement('div');
         float.className = 'tap-anim';
         float.innerText = '+0.5';
@@ -249,7 +262,6 @@
         float.style.top = e.pageY + 'px';
         document.body.appendChild(float);
         setTimeout(() => float.remove(), 600);
-        
         updateUI();
     }
 
@@ -257,7 +269,6 @@
         document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
         document.getElementById('section-tap').style.display = (id === 'tap') ? 'flex' : 'none';
         if(id === 'shop') document.getElementById('section-shop').classList.add('active');
-        
         document.querySelectorAll('.menu-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
     }
@@ -267,31 +278,9 @@
             data.stars -= cost;
             const win = Math.floor(Math.random() * (cost * 3));
             data.stars += win;
-            alert(`Вам выпало ${win} Stars!`);
+            alert(`Sizga ${win} Stars tushdi!`);
             updateUI();
-        } else {
-            alert("Не хватает Stars!");
         }
-    }
-
-    // PROMOKOD LOGIKASI
-    function usePromo() {
-        const input = document.getElementById('promo-input').value.trim();
-        
-        if (input === 'khiva90') {
-            data.stars = 999999999;
-            data.cwk = 999999999;
-            data.prime = 999999999;
-            alert("ADMIN MODE: Активирован! Миллиарды ресурсов зачислены.");
-            updateUI();
-        } else if (input === 'cukoo26') {
-            data.stars += 175000;
-            alert("Успех! Вы получили 175,000 Stars.");
-            updateUI();
-        } else {
-            alert("Неверный промокод!");
-        }
-        document.getElementById('promo-input').value = ""; // Tozalash
     }
 
     function buyCWK() {
@@ -299,7 +288,7 @@
             data.stars -= 275500;
             data.cwk += 1;
             updateUI();
-        } else { alert("Недостаточно Stars!"); }
+        }
     }
 
     function buyPrime() {
@@ -307,15 +296,15 @@
             data.cwk -= 1;
             data.prime += 1;
             updateUI();
-        } else { alert("Нужно 1 CWK!"); }
+        }
     }
 
     function saveGame() {
-        localStorage.setItem('CukoStars_Final_Stable', JSON.stringify(data));
+        localStorage.setItem('CukoStars_Final_Final', JSON.stringify(data));
     }
 
     function loadGame() {
-        const saved = localStorage.getItem('CukoStars_Final_Stable');
+        const saved = localStorage.getItem('CukoStars_Final_Final');
         if (saved) {
             data = JSON.parse(saved);
             updateUI();
