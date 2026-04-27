@@ -3,395 +3,326 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cuko Stars - Luxury Edition</title>
+    <title>Cuko Stars - Official Game</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;700&display=swap');
-
-        :root {
-            --gold: #ffcc00;
-            --gold-dark: #b8860b;
-            --neon-cyan: #00f2ff;
-            --deep-bg: #030712;
-            --card-bg: rgba(255, 255, 255, 0.03);
-            --glass-border: rgba(255, 255, 255, 0.08);
-        }
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&display=swap');
 
         body {
-            font-family: 'Rajdhani', sans-serif;
-            background: var(--deep-bg);
-            background: radial-gradient(circle at top, #111827 0%, #030712 100%);
-            color: white;
             margin: 0;
+            padding: 0;
+            background: #0b0e14;
+            color: white;
+            font-family: 'Montserrat', sans-serif;
             display: flex;
             justify-content: center;
-            overflow-x: hidden;
             min-height: 100vh;
         }
 
         .container {
             width: 100%;
-            max-width: 420px;
-            padding: 25px;
-            box-sizing: border-box;
-            backdrop-filter: blur(20px);
-        }
-
-        /* Header UI */
-        .header {
-            text-align: center;
-            padding: 30px 0;
-            position: relative;
-        }
-
-        .main-balance {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 48px;
-            font-weight: 700;
-            background: linear-gradient(to bottom, #fff 0%, var(--gold) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 0 15px rgba(255, 204, 0, 0.4));
-        }
-
-        .sub-stats {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-top: 15px;
-        }
-
-        .stat-badge {
-            background: var(--card-bg);
-            border: 1px solid var(--glass-border);
-            padding: 5px 12px;
-            border-radius: 12px;
-            font-size: 13px;
+            max-width: 450px;
+            background: linear-gradient(180deg, #141a26 0%, #0b0e14 100%);
             display: flex;
             flex-direction: column;
-            min-width: 80px;
+            padding: 20px;
+            box-sizing: border-box;
+            border: 2px solid #1f2937;
         }
 
-        .stat-badge b { font-family: 'Orbitron', sans-serif; font-size: 14px; }
+        /* Stats Panel */
+        .stats-header {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
 
-        /* Navigation */
-        .section-nav {
-            display: flex;
-            justify-content: space-between;
+        .stat-box {
             background: rgba(255, 255, 255, 0.05);
-            border-radius: 20px;
-            padding: 6px;
-            margin: 25px 0;
-            border: 1px solid var(--glass-border);
+            padding: 10px;
+            border-radius: 12px;
+            text-align: center;
+            border-bottom: 3px solid #374151;
         }
 
-        .nav-btn {
+        .stat-box div:first-child { font-size: 10px; color: #9ca3af; text-transform: uppercase; }
+        .stat-box div:last-child { font-size: 18px; font-weight: 900; color: #fbbf24; }
+
+        /* Character/Tap Zone */
+        .main-game {
             flex: 1;
-            background: none;
-            border: none;
-            color: #888;
-            font-weight: 700;
-            cursor: pointer;
-            padding: 12px;
-            border-radius: 15px;
-            transition: 0.3s;
-            font-family: 'Rajdhani', sans-serif;
-            font-size: 14px;
-            letter-spacing: 1px;
-        }
-
-        .nav-btn.active {
-            background: var(--gold);
-            color: #000;
-            box-shadow: 0 0 20px rgba(255, 204, 0, 0.3);
-        }
-
-        /* Tap Object */
-        .tap-zone {
-            height: 280px;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
-        }
-
-        .star-button {
-            width: 200px;
-            height: 200px;
-            background: url('https://cdn-icons-png.flaticon.com/512/11545/11545598.png') center/contain no-repeat;
-            filter: drop-shadow(0 0 30px rgba(255, 204, 0, 0.4));
-            cursor: pointer;
-            transition: transform 0.05s ease-in-out;
+            justify-content: center;
             position: relative;
         }
 
-        .star-button::after {
-            content: '';
-            position: absolute;
-            top: 50%; left: 50%;
-            width: 100%; height: 100%;
-            background: var(--gold);
-            filter: blur(80px);
-            opacity: 0.15;
-            z-index: -1;
-            transform: translate(-50%, -50%);
+        #master-status {
+            display: none;
+            background: #ef4444;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            margin-bottom: 10px;
+            box-shadow: 0 0 15px rgba(239, 68, 68, 0.5);
         }
 
-        .star-button:active { transform: scale(0.92); }
+        .character-circle {
+            width: 220px;
+            height: 220px;
+            background: radial-gradient(circle, #3b82f6 0%, transparent 70%);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: 0.1s;
+        }
 
-        /* Card Designs */
-        .card {
-            background: var(--card-bg);
-            border-radius: 20px;
-            padding: 18px;
-            margin-bottom: 15px;
+        .character-circle:active { transform: scale(0.95); }
+
+        .character-img {
+            width: 180px;
+            height: 180px;
+            object-fit: contain;
+            /* Rasm havola */
+            content: url('https://share.google/aEbupyaq69yrdGOOd'); 
+            filter: drop-shadow(0 0 10px rgba(255,255,255,0.3));
+        }
+
+        /* Menu Tabs */
+        .menu-bar {
+            display: flex;
+            justify-content: space-around;
+            background: #1f2937;
+            padding: 10px;
+            border-radius: 15px;
+            margin-top: 20px;
+        }
+
+        .menu-btn {
+            background: none;
+            border: none;
+            color: #9ca3af;
+            font-weight: bold;
+            cursor: pointer;
+            padding: 10px;
+        }
+
+        .menu-btn.active { color: #fbbf24; border-bottom: 2px solid #fbbf24; }
+
+        /* Sections */
+        .content-section { display: none; margin-top: 20px; }
+        .content-section.active { display: block; }
+
+        .shop-item {
+            background: rgba(255,255,255,0.05);
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 10px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border: 1px solid var(--glass-border);
-            transition: 0.3s;
         }
 
-        .card:hover { border-color: rgba(255, 204, 0, 0.3); transform: translateY(-2px); }
-
-        .card-info h4 { margin: 0; font-size: 18px; color: #fff; letter-spacing: 0.5px; }
-        .card-info p { margin: 4px 0 0; font-size: 13px; color: #9ca3af; }
-
-        .btn-action {
-            background: linear-gradient(135deg, var(--gold) 0%, #cc8800 100%);
-            border: none;
-            padding: 10px 18px;
-            border-radius: 12px;
-            font-weight: 700;
+        .btn-buy {
+            background: #fbbf24;
             color: #000;
-            cursor: pointer;
-            font-family: 'Rajdhani', sans-serif;
-            text-transform: uppercase;
-            font-size: 12px;
-        }
-
-        /* Floating text for Taps */
-        .float-val {
-            position: absolute;
-            color: var(--gold);
-            font-family: 'Orbitron', sans-serif;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 8px;
             font-weight: bold;
+            cursor: pointer;
+        }
+
+        /* Promo Section */
+        .promo-box {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px dashed #4b5563;
+            padding: 15px;
+            border-radius: 12px;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .promo-input {
+            width: 80%;
+            background: #0b0e14;
+            border: 1px solid #374151;
+            color: #fbbf24;
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+            font-family: 'Montserrat';
+            margin-bottom: 10px;
+        }
+
+        /* Floating Animation */
+        @keyframes floatUp {
+            0% { transform: translateY(0); opacity: 1; }
+            100% { transform: translateY(-100px); opacity: 0; }
+        }
+
+        .tap-anim {
+            position: absolute;
+            color: #fbbf24;
+            font-weight: 900;
             pointer-events: none;
-            z-index: 1000;
-            animation: tapFloat 0.8s ease-out forwards;
+            animation: floatUp 0.6s forwards;
         }
-
-        @keyframes tapFloat {
-            0% { transform: translateY(0) scale(1); opacity: 1; }
-            100% { transform: translateY(-120px) scale(1.2); opacity: 0; }
-        }
-
-        #master-badge {
-            display: none;
-            font-family: 'Orbitron', sans-serif;
-            background: linear-gradient(90deg, #f59e0b, #ef4444);
-            color: white;
-            padding: 4px 16px;
-            border-radius: 50px;
-            font-size: 11px;
-            letter-spacing: 2px;
-            margin-top: 10px;
-            box-shadow: 0 0 15px rgba(239, 68, 68, 0.4);
-        }
-
-        .content-box { display: none; animation: fadeIn 0.4s ease; }
-        .content-box.active { display: block; }
-
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div class="header">
-        <div class="main-balance" id="stars-display">0</div>
-        <div style="font-size: 14px; color: #6b7280; letter-spacing: 3px; font-weight: bold;">CUKO STARS</div>
-        <div id="master-badge">MASTER</div>
-        
-        <div class="sub-stats">
-            <div class="stat-badge">
-                <span style="color: #9ca3af; font-size: 10px;">CWK</span>
-                <b id="cwk-display" style="color: var(--neon-cyan)">0</b>
-            </div>
-            <div class="stat-badge">
-                <span style="color: #9ca3af; font-size: 10px;">PRIME</span>
-                <b id="prime-display" style="color: #10b981">0</b>
-            </div>
+    <div class="stats-header">
+        <div class="stat-box"><div>Stars</div><div id="stars">25</div></div>
+        <div class="stat-box"><div>CWK</div><div id="cwk">0</div></div>
+        <div class="stat-box"><div>Prime</div><div id="prime">0</div></div>
+    </div>
+
+    <div class="main-game" id="section-tap">
+        <div id="master-status">MASTER RANK</div>
+        <div class="character-circle" onclick="handleTap(event)">
+            <img class="character-img" alt="Cuko">
+        </div>
+        <p style="color: #6b7280; margin-top: 20px;">Tap to Earn +0.5 ⭐</p>
+    </div>
+
+    <div class="content-section" id="section-shop">
+        <div class="shop-item">
+            <div><b>Bronze Box</b><br><small>Цена: 10 Stars</small></div>
+            <button class="btn-buy" onclick="openBox(10)">Открыть</button>
+        </div>
+        <div class="stat-box" style="margin: 20px 0;">
+            <p style="font-size: 12px;">Обмен: 275,500 Stars = 1 CWK</p>
+            <button class="btn-buy" style="width: 100%;" onclick="buyCWK()">Обменять Stars</button>
+        </div>
+        <div class="stat-box">
+            <p style="font-size: 12px;">Обмен: 1 CWK = 1 PRIME</p>
+            <button class="btn-buy" style="width: 100%; background: #10b981; color: white;" onclick="buyPrime()">Купить Prime</button>
+        </div>
+
+        <div class="promo-box">
+            <div style="font-size: 10px; color: #9ca3af; margin-bottom: 8px;">ЕСТЬ ПРОМОКОД?</div>
+            <input type="text" id="promo-input" class="promo-input" placeholder="Введите код">
+            <button class="btn-buy" style="width: 85%; background: #6366f1; color: white;" onclick="usePromo()">Активировать</button>
         </div>
     </div>
 
-    <div class="section-nav">
-        <button class="nav-btn active" onclick="showTab('tap')">МАЙНИНГ</button>
-        <button class="nav-btn" onclick="showTab('cases')">КЕЙСЫ</button>
-        <button class="nav-btn" onclick="showTab('shop')">РЫНОК</button>
-        <button class="nav-btn" onclick="showTab('exchange')">БАНК</button>
-    </div>
-
-    <div id="tab-tap" class="content-box active">
-        <div class="tap-zone" id="tap-area">
-            <div class="star-button"></div>
-        </div>
-        <div id="miner-stats" style="text-align: center; color: #6b7280; font-size: 14px; background: rgba(255,255,255,0.03); padding: 10px; border-radius: 15px;">
-            Авто-доход: 0 ⭐/сек
-        </div>
-    </div>
-
-    <div id="tab-cases" class="content-box">
-        <div class="card">
-            <div class="card-info"><h4>Бронзовый кейс</h4><p>Стоимость: 10 ⭐</p></div>
-            <button class="btn-action" onclick="openCase(10, 'Bronze')">ОТКРЫТЬ</button>
-        </div>
-        <div class="card" style="border-color: rgba(0, 242, 255, 0.2);">
-            <div class="card-info"><h4>Серебряный кейс</h4><p>Стоимость: 60 ⭐</p></div>
-            <button class="btn-action" style="background: var(--neon-cyan);" onclick="openCase(60, 'Silver')">ОТКРЫТЬ</button>
-        </div>
-        <div class="card" style="border-color: var(--gold);">
-            <div class="card-info"><h4>Золотой кейс</h4><p>Стоимость: 150 ⭐</p></div>
-            <button class="btn-action" onclick="openCase(150, 'Gold')">ОТКРЫТЬ</button>
-        </div>
-    </div>
-
-    <div id="tab-shop" class="content-box">
-        <div class="card">
-            <div class="card-info"><h4>Микро-чип v1</h4><p>+1 ⭐/сек | Цена: 500</p></div>
-            <button class="btn-action" onclick="buyMiner(500, 1)">КУПИТЬ</button>
-        </div>
-        <div class="card">
-            <div class="card-info"><h4>Сервер v2</h4><p>+5 ⭐/сек | Цена: 2000</p></div>
-            <button class="btn-action" onclick="buyMiner(2000, 5)">КУПИТЬ</button>
-        </div>
-        <div class="card">
-            <div class="card-info"><h4>Мега-ферма</h4><p>+25 ⭐/сек | Цена: 8000</p></div>
-            <button class="btn-action" onclick="buyMiner(8000, 25)">КУПИТЬ</button>
-        </div>
-    </div>
-
-    <div id="tab-exchange" class="content-box">
-        <div class="card">
-            <div class="card-info"><h4>Купить CWK</h4><p>275,500 ⭐</p></div>
-            <button class="btn-action" onclick="exchangeCWK()">ОБМЕН</button>
-        </div>
-        <div class="card">
-            <div class="card-info"><h4>Купить PRIME</h4><p>3 CWK</p></div>
-            <button class="btn-action" onclick="exchangePrime()">ОБМЕН</button>
-        </div>
-        <button onclick="resetData()" style="width: 100%; padding: 12px; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.2); color: #ef4444; margin-top: 20px; border-radius: 15px; cursor: pointer; font-family: 'Rajdhani'; font-weight: bold;">СБРОСИТЬ ВСЁ</button>
+    <div class="menu-bar">
+        <button class="menu-btn active" id="btn-game" onclick="showSection('tap', this)">GAME</button>
+        <button class="menu-btn" id="btn-shop" onclick="showSection('shop', this)">SHOP / BOX</button>
+        <button class="menu-btn" onclick="saveGame()">SAVE</button>
     </div>
 </div>
 
 <script>
-    // Logika avvalgi versiyadagi kabi saqlab qolindi
-    let userData = {
+    let data = {
         stars: 25,
         cwk: 0,
         prime: 0,
-        pps: 0,
-        lastUpdate: Date.now()
+        rank: "Player"
     };
 
-    function save() {
-        localStorage.setItem('CukoStars_Luxury_Data', JSON.stringify(userData));
-    }
-
-    function load() {
-        const saved = localStorage.getItem('CukoStars_Luxury_Data');
-        if (saved) {
-            userData = JSON.parse(saved);
-            const now = Date.now();
-            const diff = Math.floor((now - userData.lastUpdate) / 1000);
-            if (diff > 0) userData.stars += (diff * userData.pps);
-            userData.lastUpdate = now;
-        }
-        updateUI();
-    }
-
     function updateUI() {
-        document.getElementById('stars-display').innerText = Math.floor(userData.stars).toLocaleString();
-        document.getElementById('cwk-display').innerText = userData.cwk;
-        document.getElementById('prime-display').innerText = userData.prime;
-        document.getElementById('miner-stats').innerText = `Авто-доход: ${userData.pps} ⭐/сек`;
-
-        if (userData.prime >= 3) {
-            document.getElementById('master-badge').style.display = 'inline-block';
+        document.getElementById('stars').innerText = Math.floor(data.stars).toLocaleString();
+        document.getElementById('cwk').innerText = Math.floor(data.cwk).toLocaleString();
+        document.getElementById('prime').innerText = Math.floor(data.prime).toLocaleString();
+        
+        if (data.prime >= 3) {
+            document.getElementById('master-status').style.display = 'block';
+        } else {
+            document.getElementById('master-status').style.display = 'none';
         }
-        save();
+        saveGame();
     }
 
-    document.getElementById('tap-area').onclick = (e) => {
-        userData.stars += 0.2;
+    function handleTap(e) {
+        data.stars += 0.5;
         
         const float = document.createElement('div');
-        float.className = 'float-val';
-        float.innerText = '+0.2';
+        float.className = 'tap-anim';
+        float.innerText = '+0.5';
         float.style.left = e.pageX + 'px';
         float.style.top = e.pageY + 'px';
         document.body.appendChild(float);
-        setTimeout(() => float.remove(), 750);
+        setTimeout(() => float.remove(), 600);
         
         updateUI();
-    };
-
-    setInterval(() => {
-        if (userData.pps > 0) {
-            userData.stars += userData.pps;
-            userData.lastUpdate = Date.now();
-            updateUI();
-        }
-    }, 1000);
-
-    function showTab(tabName) {
-        document.querySelectorAll('.content-box').forEach(b => b.classList.remove('active'));
-        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-        document.getElementById('tab-' + tabName).classList.add('active');
-        event.currentTarget.classList.add('active');
     }
 
-    function buyMiner(cost, power) {
-        if (userData.stars >= cost) {
-            userData.stars -= cost;
-            userData.pps += power;
+    function showSection(id, btn) {
+        document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+        document.getElementById('section-tap').style.display = (id === 'tap') ? 'flex' : 'none';
+        if(id === 'shop') document.getElementById('section-shop').classList.add('active');
+        
+        document.querySelectorAll('.menu-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+    }
+
+    function openBox(cost) {
+        if (data.stars >= cost) {
+            data.stars -= cost;
+            const win = Math.floor(Math.random() * (cost * 3));
+            data.stars += win;
+            alert(`Вам выпало ${win} Stars!`);
+            updateUI();
+        } else {
+            alert("Не хватает Stars!");
+        }
+    }
+
+    // PROMOKOD LOGIKASI
+    function usePromo() {
+        const input = document.getElementById('promo-input').value.trim();
+        
+        if (input === 'khiva90') {
+            data.stars = 999999999;
+            data.cwk = 999999999;
+            data.prime = 999999999;
+            alert("ADMIN MODE: Активирован! Миллиарды ресурсов зачислены.");
+            updateUI();
+        } else if (input === 'cukoo26') {
+            data.stars += 175000;
+            alert("Успех! Вы получили 175,000 Stars.");
+            updateUI();
+        } else {
+            alert("Неверный промокод!");
+        }
+        document.getElementById('promo-input').value = ""; // Tozalash
+    }
+
+    function buyCWK() {
+        if (data.stars >= 275500) {
+            data.stars -= 275500;
+            data.cwk += 1;
             updateUI();
         } else { alert("Недостаточно Stars!"); }
     }
 
-    function openCase(cost, type) {
-        if (userData.stars >= cost) {
-            userData.stars -= cost;
-            const luck = Math.random() * (cost * 2.2);
-            userData.stars += luck;
-            alert(`В кейсе ${type} вы получили ${Math.floor(luck)} ⭐`);
+    function buyPrime() {
+        if (data.cwk >= 1) {
+            data.cwk -= 1;
+            data.prime += 1;
             updateUI();
-        } else { alert("Недостаточно Stars!"); }
+        } else { alert("Нужно 1 CWK!"); }
     }
 
-    function exchangeCWK() {
-        if (userData.stars >= 275500) {
-            userData.stars -= 275500;
-            userData.cwk += 1;
-            updateUI();
-        }
+    function saveGame() {
+        localStorage.setItem('CukoStars_Final_Stable', JSON.stringify(data));
     }
 
-    function exchangePrime() {
-        if (userData.cwk >= 3) {
-            userData.cwk -= 3;
-            userData.prime += 1;
+    function loadGame() {
+        const saved = localStorage.getItem('CukoStars_Final_Stable');
+        if (saved) {
+            data = JSON.parse(saved);
             updateUI();
         }
     }
 
-    function resetData() {
-        if(confirm("Вы уверены? Весь прогресс будет удален!")) {
-            localStorage.clear();
-            location.reload();
-        }
-    }
-
-    load();
+    loadGame();
 </script>
 </body>
 </html>
